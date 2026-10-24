@@ -55,6 +55,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker build -t product-service:1.0 ./product-service'
+                sh 'docker build -t cart-service:1.0 ./cart-service'
+                echo 'Both Docker images built successfully!'
+            }
+        }
     }
 
     post {
