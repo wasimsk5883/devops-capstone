@@ -1,0 +1,15 @@
+
+services:
+  product-service:
+    build: ./product-service
+    image: product-service:1.0
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
+
+  cart-service:
+    build: ./cart-service
+    image: cart-service:1.0
+    ports:
+      - "5002:5000"
+    restart: unless-stopped
