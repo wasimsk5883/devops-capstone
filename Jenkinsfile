@@ -1,5 +1,3 @@
-
-
 pipeline {
     agent any
 
@@ -42,7 +40,18 @@ pipeline {
         stage('Run Product Service Tests') {
             steps {
                 dir('product-service') {
-                    sh '../.venv-ci/bin/python -m pytest -v'
+                    sh '../.venv-ci/bin/python -m pytest -v tests/'
+                }
+            }
+        }
+
+        stage('Run Cart Service Tests') {
+            steps {
+                dir('cart-service') {
+                    sh '''
+                        ../.venv-ci/bin/pip install -r requirements.txt
+                        ../.venv-ci/bin/python -m pytest -v tests/
+                    '''
                 }
             }
         }
