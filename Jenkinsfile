@@ -19,5 +19,14 @@ pipeline {
                 echo 'Project files verified successfully'
             }
         }
+
+        stage('Python Syntax Check') {
+            steps {
+                sh 'python3 --version'
+                sh 'python3 -m py_compile product-service/app.py'
+                sh 'python3 -m py_compile cart-service/app.py'
+                echo 'Python syntax checks passed'
+            }
+        }
     }
 }
