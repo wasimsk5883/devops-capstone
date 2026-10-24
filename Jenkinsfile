@@ -1,11 +1,12 @@
 
+
 pipeline {
     agent any
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Source code is managed in GitHub'
+                echo 'Checking out source code'
                 checkout scm
             }
         }
@@ -27,6 +28,32 @@ pipeline {
                 sh 'python3 -m py_compile cart-service/app.py'
                 echo 'Python syntax checks passed'
             }
+        }
+
+        stage('Install Test Dependencies') {
+            steps {
+                sh '''
+                    python3 -m venv .venv-ci
+                    .venv-ci/bin/pip install -r product-service/requirements.txt
+                '''
+            }
+        }
+
+        stage('Run Product Service Tests') {
+            steps {
+                dir('product-service') {
+                    sh '../.venv-ci/bin/python -m pytest -v'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CI pipeline completed successfully!'
+        }
+        failure {
+            echo 'CI pipeline failed. Check the stage logs.'
         }
     }
 }
