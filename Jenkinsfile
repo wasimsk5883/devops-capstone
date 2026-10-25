@@ -31,6 +31,7 @@ pipeline {
         stage('Install Test Dependencies') {
             steps {
                 sh '''
+                    rm -rf .venv-ci
                     python3 -m venv .venv-ci
                     .venv-ci/bin/pip install -r product-service/requirements.txt
                 '''
@@ -63,14 +64,22 @@ pipeline {
                 echo 'Both Docker images built successfully!'
             }
         }
+
+        stage('Deploy Services') {
+            steps {
+                sh 'docker-compose up -d'
+                sh 'docker-compose ps'
+                echo 'Both microservices deployed successfully!'
+            }
+        }
     }
 
     post {
         success {
-            echo 'CI pipeline completed successfully!'
+            echo 'CI/CD pipeline completed successfully!'
         }
         failure {
-            echo 'CI pipeline failed. Check the stage logs.'
+            echo 'CI/CD pipeline failed. Check the stage logs.'
         }
     }
 }
